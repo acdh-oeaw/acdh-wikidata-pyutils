@@ -10,3 +10,14 @@ Utitliy package to fetch data from Wikidata
 * install dev-dependencies `pip install -r requirements_dev.txt`
 * install acdh-wikidata-pyutils locally `pip install -e .`
 * run tests `coverage run -m pytest`
+
+# usage
+
+```python
+from acdh_wikidata_pyutils import WikiDataPerson
+
+item = WikiDataPerson("https://www.wikidata.org/wiki/Q44331")
+person = item.get_apis_person()
+print(person)
+# {'name': 'Schnitzler', 'first_name': 'Arthur', 'start_date_written': '1862-05-15', 'end_date_written': '1931-10-21', 'gender': 'male'}
+```
