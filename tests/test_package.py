@@ -34,4 +34,9 @@ class TestTestTest(unittest.TestCase):
     def test_005_poor_data(self):
         item = WikiDataPerson(POOR_DATA_URL)
         apis_person = item.get_apis_person()
-        self.assertFalse(apis_person["name"])
+        self.assertFalse(apis_person["first_name"])
+
+    def test_006_no_name(self):
+        item = WikiDataPerson(POOR_DATA_URL)
+        apis_person = item.get_apis_person()
+        self.assertEqual(apis_person["name"], "Peter Andorfer")

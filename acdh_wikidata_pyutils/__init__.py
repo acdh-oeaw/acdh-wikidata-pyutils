@@ -39,7 +39,7 @@ class WikiDataPerson:
         try:
             self.name = str(self.entity[name_prop].label)
         except KeyError:
-            self.name = None
+            self.name = self.label
         try:
             self.date_of_birth = str(self.entity[date_of_birth_prop])
         except KeyError:
