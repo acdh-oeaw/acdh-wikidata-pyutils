@@ -38,6 +38,6 @@ setup(
     ),
     setup_requires=setup_requirements,
     url="https://github.com/acdh-oeaw/acdh-wikidata-pyutils",
-    version="0.0.1",
+    version="0.2",
     zip_safe=False,
 )
