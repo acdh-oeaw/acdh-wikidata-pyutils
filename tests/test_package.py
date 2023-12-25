@@ -1,6 +1,6 @@
 import unittest
-from acdh_wikidata_pyutils import WikiDataPerson, NoWikiDataUrlException
 
+from acdh_wikidata_pyutils import NoWikiDataUrlException, WikiDataPerson
 
 ARTHUR_SCHNITZLER_URL = "https://www.wikidata.org/wiki/Q44331"
 ARTHUR_SCHNITZLER_ID = "Q44331"
@@ -25,3 +25,7 @@ class TestTestTest(unittest.TestCase):
     def test_003_non_valid_url(self):
         with self.assertRaises(NoWikiDataUrlException):
             WikiDataPerson(ARTHUR_SCHNITZLER_URL.replace("wikidata", "hansi"))
+
+    def test_004_label(self):
+        item = WikiDataPerson(ARTHUR_SCHNITZLER_URL)
+        self.assertEqual(item.label, "Arthur Schnitzler")
