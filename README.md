@@ -18,7 +18,16 @@ Utitliy package to fetch data from Wikidata
 from acdh_wikidata_pyutils import WikiDataPerson
 
 item = WikiDataPerson("https://www.wikidata.org/wiki/Q44331")
-person = item.get_apis_person()
+person = item.get_apis_entity()
 print(person)
 # {'name': 'Schnitzler', 'first_name': 'Arthur', 'start_date_written': '1862-05-15', 'end_date_written': '1931-10-21', 'gender': 'male'}
+```
+
+```python
+from acdh_wikidata_pyutils import WikiDataPlace
+
+item = WikiDataPlace("https://www.wikidata.org/wiki/Q41329")
+place = item.get_apis_entity()
+print(place)
+# {'name': 'Linz', 'lat': 48.30583333333333, 'long': 14.286388888888888}
 ```

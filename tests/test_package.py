@@ -1,10 +1,15 @@
 import unittest
 
-from acdh_wikidata_pyutils import NoWikiDataUrlException, WikiDataPerson
+from acdh_wikidata_pyutils import NoWikiDataUrlException, WikiDataPerson, WikiDataPlace
 
 ARTHUR_SCHNITZLER_URL = "https://www.wikidata.org/wiki/Q44331"
 ARTHUR_SCHNITZLER_ID = "Q44331"
 POOR_DATA_URL = "https://www.wikidata.org/wiki/Q122733648"
+LINZ_URL = "https://www.wikidata.org/wiki/Q41329"
+
+ARTHUR_SCHNITZLER = WikiDataPerson(ARTHUR_SCHNITZLER_URL)
+POOR_DATA_ITEM = WikiDataPerson(POOR_DATA_URL)
+LINZ = WikiDataPlace(LINZ_URL)
 
 
 class TestTestTest(unittest.TestCase):
@@ -20,7 +25,7 @@ class TestTestTest(unittest.TestCase):
         self.assertTrue(True)
 
     def test_002_valid_url(self):
-        item = WikiDataPerson(ARTHUR_SCHNITZLER_URL)
+        item = ARTHUR_SCHNITZLER
         self.assertEqual(item.wikidata_id, ARTHUR_SCHNITZLER_ID)
 
     def test_003_non_valid_url(self):
@@ -28,15 +33,23 @@ class TestTestTest(unittest.TestCase):
             WikiDataPerson(ARTHUR_SCHNITZLER_URL.replace("wikidata", "hansi"))
 
     def test_004_label(self):
-        item = WikiDataPerson(ARTHUR_SCHNITZLER_URL)
+        item = ARTHUR_SCHNITZLER
         self.assertEqual(item.label, "Arthur Schnitzler")
 
     def test_005_poor_data(self):
-        item = WikiDataPerson(POOR_DATA_URL)
-        apis_person = item.get_apis_person()
+        item = POOR_DATA_ITEM
+        apis_person = item.get_apis_entity()
         self.assertFalse(apis_person["first_name"])
 
     def test_006_no_name(self):
-        item = WikiDataPerson(POOR_DATA_URL)
-        apis_person = item.get_apis_person()
+        item = POOR_DATA_ITEM
+        apis_person = item.get_apis_entity()
         self.assertEqual(apis_person["name"], "Peter Andorfer")
+
+    def test_007_coords(self):
+        item = LINZ
+        self.assertTrue("lat" in item.get_apis_entity().keys())
+
+    def test_008_no_coords(self):
+        item = WikiDataPlace(ARTHUR_SCHNITZLER_URL)
+        self.assertFalse(item.lat)
