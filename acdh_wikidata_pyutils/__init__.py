@@ -6,6 +6,13 @@ class NoWikiDataUrlException(Exception):
     pass
 
 
+def check_url(wikidata_url):
+    if "wikidata" not in wikidata_url:
+        raise NoWikiDataUrlException(f"{wikidata_url} is no proper Wikidata URL")
+    else:
+        return get_normalized_uri(wikidata_url)
+
+
 class WikiDataPerson:
     """Class to fetch and return often used data from WikiData Person entries"""
 
@@ -19,10 +26,7 @@ class WikiDataPerson:
         }
 
     def __init__(self, wikidata_url):
-        if "wikidata" not in wikidata_url:
-            raise NoWikiDataUrlException(f"{wikidata_url} is no proper Wikidata URL")
-        else:
-            self.wikidata_url = get_normalized_uri(wikidata_url)
+        self.wikidata_url = check_url(wikidata_url)
         self.wikidata_id = get_norm_id(self.wikidata_url)
         self.client = Client()
         self.entity = self.client.get(self.wikidata_id, load=True)
