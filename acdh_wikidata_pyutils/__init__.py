@@ -13,10 +13,35 @@ def check_url(wikidata_url):
         return get_normalized_uri(wikidata_url)
 
 
+class WikiDataPlace:
+    """Class to fetch and return often used data from WikiData Person entries"""
+
+    def get_apis_entity(self):
+        return {"name": self.label, "lat": self.lat, "long": self.long}
+
+    def __init__(self, wikidata_url):
+        self.wikidata_url = check_url(wikidata_url)
+        self.wikidata_id = get_norm_id(self.wikidata_url)
+        self.client = Client()
+        self.entity = self.client.get(self.wikidata_id, load=True)
+        self.label = str(self.entity.label)
+        coordinates_prop = self.client.get("P625")
+        try:
+            coordinates = self.entity[coordinates_prop]
+        except KeyError:
+            coordinates = False
+        if coordinates:
+            self.lat = coordinates.latitude
+            self.long = coordinates.longitude
+        else:
+            self.lat = None
+            self.long = None
+
+
 class WikiDataPerson:
     """Class to fetch and return often used data from WikiData Person entries"""
 
-    def get_apis_person(self):
+    def get_apis_entity(self):
         return {
             "name": self.name,
             "first_name": self.first_name,
