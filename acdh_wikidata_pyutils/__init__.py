@@ -1,6 +1,8 @@
 from AcdhArcheAssets.uri_norm_rules import get_norm_id, get_normalized_uri
 from wikidata.client import Client
 
+WIKIDATA_URL = "https://www.wikidata.org/wiki/"
+
 
 class NoWikiDataUrlException(Exception):
     pass
@@ -58,6 +60,8 @@ class WikiDataPerson:
         self.label = str(self.entity.label)
         date_of_birth_prop = self.client.get("P569")
         date_of_death_prop = self.client.get("P570")
+        place_of_birth_prop = self.client.get("P19")
+        place_of_death_prop = self.client.get("P20")
         sex_or_gender_prop = self.client.get("P21")
         first_name_prop = self.client.get("P735")
         name_prop = self.client.get("P734")
@@ -81,3 +85,17 @@ class WikiDataPerson:
             self.sex_or_gender = str(self.entity[sex_or_gender_prop].label)
         except KeyError:
             self.sex_or_gender = None
+        try:
+            place_of_birth_id = str(self.entity[place_of_birth_prop].id)
+            self.place_of_birth = get_normalized_uri(
+                f"{WIKIDATA_URL}{place_of_birth_id}"
+            )
+        except KeyError:
+            self.place_of_birth = None
+        try:
+            place_of_death_id = str(self.entity[place_of_death_prop].id)
+            self.place_of_death = get_normalized_uri(
+                f"{WIKIDATA_URL}{place_of_death_id}"
+            )
+        except KeyError:
+            self.place_of_death = None
