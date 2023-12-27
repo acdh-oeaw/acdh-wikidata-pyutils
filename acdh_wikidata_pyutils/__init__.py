@@ -2,6 +2,8 @@ from AcdhArcheAssets.uri_norm_rules import get_norm_id, get_normalized_uri
 from wikidata.client import Client
 
 WIKIDATA_URL = "https://www.wikidata.org/wiki/"
+GEONAMES_URL = "https://sws.geonames.org/"
+GND_URL = "https://d-nb.info/gnd/"
 
 
 class NoWikiDataUrlException(Exception):
@@ -28,6 +30,8 @@ class WikiDataPlace:
         self.entity = self.client.get(self.wikidata_id, load=True)
         self.label = str(self.entity.label)
         coordinates_prop = self.client.get("P625")
+        gnd_uri_property = self.client.get("P227")
+        geonames_uri_property = self.client.get("P1566")
         try:
             coordinates = self.entity[coordinates_prop]
         except KeyError:
@@ -38,6 +42,16 @@ class WikiDataPlace:
         else:
             self.lat = None
             self.long = None
+        try:
+            gnd_uri = self.entity[gnd_uri_property]
+            self.gnd_uri = get_normalized_uri(f"{GND_URL}{gnd_uri}")
+        except KeyError:
+            self.gnd_uri = False
+        try:
+            geonames_uri = self.entity[geonames_uri_property]
+            self.geonames_uri = get_normalized_uri(f"{GEONAMES_URL}{geonames_uri}")
+        except KeyError:
+            self.geonames_uri = False
 
 
 class WikiDataPerson:
@@ -65,6 +79,7 @@ class WikiDataPerson:
         sex_or_gender_prop = self.client.get("P21")
         first_name_prop = self.client.get("P735")
         name_prop = self.client.get("P734")
+        gnd_uri_property = self.client.get("P227")
         try:
             self.first_name = str(self.entity[first_name_prop].label)
         except KeyError:
@@ -99,3 +114,8 @@ class WikiDataPerson:
             )
         except KeyError:
             self.place_of_death = None
+        try:
+            gnd_uri = self.entity[gnd_uri_property]
+            self.gnd_uri = get_normalized_uri(f"{GND_URL}{gnd_uri}")
+        except KeyError:
+            self.gnd_uri = False
