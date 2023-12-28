@@ -21,7 +21,7 @@ class WikiDataPlace:
     """Class to fetch and return often used data from WikiData Person entries"""
 
     def get_apis_entity(self):
-        return {"name": self.label, "lat": self.lat, "long": self.long}
+        return {"name": self.label, "lat": self.lat, "lng": self.lng}
 
     def __init__(self, wikidata_url):
         self.wikidata_url = check_url(wikidata_url)
@@ -38,10 +38,10 @@ class WikiDataPlace:
             coordinates = False
         if coordinates:
             self.lat = coordinates.latitude
-            self.long = coordinates.longitude
+            self.lng = coordinates.longitude
         else:
             self.lat = None
-            self.long = None
+            self.lng = None
         try:
             gnd_uri = self.entity[gnd_uri_property]
             self.gnd_uri = get_normalized_uri(f"{GND_URL}{gnd_uri}")
