@@ -6,6 +6,7 @@ ARTHUR_SCHNITZLER_URL = "https://www.wikidata.org/wiki/Q44331"
 ARTHUR_SCHNITZLER_ID = "Q44331"
 POOR_DATA_URL = "https://www.wikidata.org/wiki/Q122733648"
 LINZ_URL = "https://www.wikidata.org/wiki/Q41329"
+BROKEN = "https://www.wikidata.org/wiki/Q2390830"
 
 ARTHUR_SCHNITZLER = WikiDataPerson(ARTHUR_SCHNITZLER_URL)
 POOR_DATA_ITEM = WikiDataPerson(POOR_DATA_URL)
@@ -39,12 +40,12 @@ class TestTestTest(unittest.TestCase):
     def test_005_poor_data(self):
         item = POOR_DATA_ITEM
         apis_person = item.get_apis_entity()
-        self.assertFalse(apis_person["first_name"])
+        self.assertTrue(apis_person["first_name"])
 
     def test_006_no_name(self):
         item = POOR_DATA_ITEM
         apis_person = item.get_apis_entity()
-        self.assertEqual(apis_person["name"], "Peter Andorfer")
+        self.assertEqual(apis_person["name"], "Andorfer")
 
     def test_007_coords(self):
         item = LINZ
@@ -59,3 +60,7 @@ class TestTestTest(unittest.TestCase):
     def test_008_no_ngd(self):
         item = WikiDataPerson("https://www.wikidata.org/wiki/Q16006181")
         self.assertFalse(item.gnd_uri)
+
+    def test_009_broken_date(self):
+        item = WikiDataPerson(BROKEN)
+        self.assertFalse(item.date_of_birth)
