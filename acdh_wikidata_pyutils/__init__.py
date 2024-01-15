@@ -90,11 +90,11 @@ class WikiDataPerson:
             self.name = self.label
         try:
             self.date_of_birth = str(self.entity[date_of_birth_prop])
-        except KeyError:
+        except (KeyError, ValueError):
             self.date_of_birth = None
         try:
             self.date_of_death = str(self.entity[date_of_death_prop])
-        except KeyError:
+        except (KeyError, ValueError):
             self.date_of_death = None
         try:
             self.sex_or_gender = str(self.entity[sex_or_gender_prop].label)
