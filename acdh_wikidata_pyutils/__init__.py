@@ -1,9 +1,29 @@
+import requests
+
 from AcdhArcheAssets.uri_norm_rules import get_norm_id, get_normalized_uri
 from wikidata.client import Client
 
 WIKIDATA_URL = "https://www.wikidata.org/wiki/"
 GEONAMES_URL = "https://sws.geonames.org/"
 GND_URL = "https://d-nb.info/gnd/"
+IMG_EP = "https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&entity={}&format=json"
+URL_STUB = (
+    "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/{}&width={}"
+)
+
+
+def fetch_image(wikidata_id: str, img_width: int = 400) -> str():
+    if wikidata_id.startswith("http"):
+        wikidata_id = get_norm_id(wikidata_id)
+    url = IMG_EP.format(wikidata_id)
+    r = requests.get(url)
+    try:
+        img_name = r.json()["claims"]["P18"][0]["mainsnak"]["datavalue"]["value"]
+    except KeyError:
+        return ""
+    if img_name is not None:
+        img = URL_STUB.format(img_name, img_width)
+        return img
 
 
 class NoWikiDataUrlException(Exception):

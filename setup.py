@@ -11,6 +11,7 @@ with open("README.md") as readme_file:
 requirements = [
     "acdh-arche-assets>=3.6,<4",
     "Wikidata>=0.7.0,<1",
+    "requests",
 ]
 
 setup_requirements = []
