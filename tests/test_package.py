@@ -1,6 +1,11 @@
 import unittest
 
-from acdh_wikidata_pyutils import NoWikiDataUrlException, WikiDataPerson, WikiDataPlace
+from acdh_wikidata_pyutils import (
+    NoWikiDataUrlException,
+    WikiDataPerson,
+    WikiDataPlace,
+    fetch_image,
+)
 
 ARTHUR_SCHNITZLER_URL = "https://www.wikidata.org/wiki/Q44331"
 ARTHUR_SCHNITZLER_ID = "Q44331"
@@ -64,3 +69,12 @@ class TestTestTest(unittest.TestCase):
     def test_009_broken_date(self):
         item = WikiDataPerson(BROKEN)
         self.assertFalse(item.date_of_birth)
+
+    def test_010_fetch_image(self):
+        good = "Q2390830"
+        bad = "https://www.wikidata.org/wiki/Q2391212121208asdfdsafsf30"
+        item = fetch_image(good, img_width="200")
+        self.assertTrue(item)
+        self.assertTrue("200" in item)
+        item = fetch_image(bad, img_width="200")
+        self.assertFalse(item)
