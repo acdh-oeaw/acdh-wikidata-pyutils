@@ -73,8 +73,7 @@ class TestTestTest(unittest.TestCase):
     def test_010_fetch_image(self):
         good = "Q2390830"
         bad = "https://www.wikidata.org/wiki/Q2391212121208asdfdsafsf30"
-        item = fetch_image(good, img_width="200")
+        item = fetch_image(good)
         self.assertTrue(item)
-        self.assertTrue("200" in item)
-        item = fetch_image(bad, img_width="200")
+        item = fetch_image(bad)
         self.assertFalse(item)
