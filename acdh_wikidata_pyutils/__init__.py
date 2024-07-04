@@ -12,7 +12,15 @@ IMG_EP = "https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&ent
 URL_STUB = "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/{}"
 
 
-def fetch_image(wikidata_id: str) -> str():
+def fetch_image(wikidata_id: str) -> str:
+    """returns the URL of a wikimedia image related to the given wikidata id
+
+    Args:
+        wikidata_id (str): a wikidata id e.g. 'Q2390830'
+
+    Returns:
+        str: the URL to the image, e.g. 'https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/Theo.%20Komisarjevsky%20LCCN2014715267.jpg'
+    """  # noqa
     if wikidata_id.startswith("http"):
         wikidata_id = get_norm_id(wikidata_id)
     url = IMG_EP.format(wikidata_id)
