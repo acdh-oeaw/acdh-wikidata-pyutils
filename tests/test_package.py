@@ -4,6 +4,8 @@ from acdh_wikidata_pyutils import (
     NoWikiDataUrlException,
     WikiDataPerson,
     WikiDataPlace,
+    WikiDataEntity,
+    WikiDataOrg,
     fetch_image,
 )
 
@@ -77,3 +79,18 @@ class TestTestTest(unittest.TestCase):
         self.assertTrue(item)
         item = fetch_image(bad)
         self.assertFalse(item)
+
+    def test_011_wikidataentity(self):
+        good = "https://www.wikidata.org/wiki/Q2919142"
+        item = WikiDataEntity(good)
+        self.assertTrue("name" in item.get_apis_entity().keys())
+
+    def test_012_wikidataorg(self):
+        wiki_url = "https://www.wikidata.org/wiki/Q557116"
+        item = WikiDataOrg(wiki_url)
+        self.assertEqual(item.get_apis_entity()["name"], "Ankerbrot")
+
+    def test_013_wikidataorg1(self):
+        wiki_url = "https://www.wikidata.org/wiki/Q308720"
+        item = WikiDataOrg(wiki_url)
+        self.assertEqual(item.gnd_uri, "https://d-nb.info/gnd/38633-9")

@@ -1,8 +1,8 @@
 import urllib.parse
+import requests
+from typing_extensions import Self
 
 from AcdhArcheAssets.uri_norm_rules import get_norm_id, get_normalized_uri
-import requests
-
 from wikidata.client import Client
 
 WIKIDATA_URL = "https://www.wikidata.org/wiki/"
@@ -45,11 +45,19 @@ def check_url(wikidata_url):
         return get_normalized_uri(wikidata_url)
 
 
-class WikiDataPlace:
-    """Class to fetch and return often used data from WikiData Person entries"""
+class WikiDataEntity:
+    """A base class for wikidata entities"""
 
-    def get_apis_entity(self):
-        return {"name": self.label, "lat": self.lat, "lng": self.lng}
+    def get_apis_entity(self: Self) -> dict:
+        """returns a dict representing the wikidata entity
+
+        Args:
+            self (Self): A wikiDataEntity Object
+
+        Returns:
+            dict: a dict like `{"name": "some label"}
+        """
+        return {"name": self.label}
 
     def __init__(self, wikidata_url):
         self.wikidata_url = check_url(wikidata_url)
@@ -57,8 +65,23 @@ class WikiDataPlace:
         self.client = Client()
         self.entity = self.client.get(self.wikidata_id, load=True)
         self.label = str(self.entity.label)
-        coordinates_prop = self.client.get("P625")
         gnd_uri_property = self.client.get("P227")
+        try:
+            gnd_uri = self.entity[gnd_uri_property]
+            self.gnd_uri = get_normalized_uri(f"{GND_URL}{gnd_uri}")
+        except KeyError:
+            self.gnd_uri = False
+
+
+class WikiDataPlace(WikiDataEntity):
+    """Class to fetch and return often used data from WikiData Person entries"""
+
+    def get_apis_entity(self):
+        return {"name": self.label, "lat": self.lat, "lng": self.lng}
+
+    def __init__(self, wikidata_url):
+        super().__init__(wikidata_url)
+        coordinates_prop = self.client.get("P625")
         geonames_uri_property = self.client.get("P1566")
         try:
             coordinates = self.entity[coordinates_prop]
@@ -71,18 +94,13 @@ class WikiDataPlace:
             self.lat = None
             self.lng = None
         try:
-            gnd_uri = self.entity[gnd_uri_property]
-            self.gnd_uri = get_normalized_uri(f"{GND_URL}{gnd_uri}")
-        except KeyError:
-            self.gnd_uri = False
-        try:
             geonames_uri = self.entity[geonames_uri_property]
             self.geonames_uri = get_normalized_uri(f"{GEONAMES_URL}{geonames_uri}")
         except KeyError:
             self.geonames_uri = False
 
 
-class WikiDataPerson:
+class WikiDataPerson(WikiDataEntity):
     """Class to fetch and return often used data from WikiData Person entries"""
 
     def get_apis_entity(self):
@@ -95,11 +113,7 @@ class WikiDataPerson:
         }
 
     def __init__(self, wikidata_url):
-        self.wikidata_url = check_url(wikidata_url)
-        self.wikidata_id = get_norm_id(self.wikidata_url)
-        self.client = Client()
-        self.entity = self.client.get(self.wikidata_id, load=True)
-        self.label = str(self.entity.label)
+        super().__init__(wikidata_url)
         date_of_birth_prop = self.client.get("P569")
         date_of_death_prop = self.client.get("P570")
         place_of_birth_prop = self.client.get("P19")
@@ -107,7 +121,6 @@ class WikiDataPerson:
         sex_or_gender_prop = self.client.get("P21")
         first_name_prop = self.client.get("P735")
         name_prop = self.client.get("P734")
-        gnd_uri_property = self.client.get("P227")
         try:
             self.first_name = str(self.entity[first_name_prop].label)
         except KeyError:
@@ -142,8 +155,28 @@ class WikiDataPerson:
             )
         except KeyError:
             self.place_of_death = None
+
+
+class WikiDataOrg(WikiDataEntity):
+    def get_apis_entity(self):
+        return {"name": self.label, "start_date_written": self.start_date}
+
+    def __init__(self, wikidata_url):
+        super().__init__(wikidata_url)
+        start_date_prop = self.client.get("P571")
+        location_hq_prop = self.client.get("P159")
+        location_prop = self.client.get("P276")
         try:
-            gnd_uri = self.entity[gnd_uri_property]
-            self.gnd_uri = get_normalized_uri(f"{GND_URL}{gnd_uri}")
+            self.start_date = str(self.entity[start_date_prop])
+        except (KeyError, ValueError):
+            self.start_date = None
+        try:
+            location_id = str(self.entity[location_hq_prop].id)
+            self.location = get_normalized_uri(f"{WIKIDATA_URL}{location_id}")
         except KeyError:
-            self.gnd_uri = False
+            try:
+                self.location_id = str(self.entity[location_prop].id)
+                self.location = get_normalized_uri(f"{WIKIDATA_URL}{self.location_id}")
+            except KeyError:
+                self.location_id = None
+                self.location = None

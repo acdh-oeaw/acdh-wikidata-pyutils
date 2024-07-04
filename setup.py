@@ -10,6 +10,7 @@ with open("README.md") as readme_file:
 
 requirements = [
     "acdh-arche-assets>=3.6,<4",
+    "typing-extensions>=4.12.2,5",
     "Wikidata>=0.7.0,<1",
     "requests",
 ]
