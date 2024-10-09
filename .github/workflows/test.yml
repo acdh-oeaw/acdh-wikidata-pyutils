@@ -17,7 +17,7 @@ jobs:
         pip install --upgrade --upgrade-strategy eager -r requirements_dev.txt
     - name: Install actual package
       run: |
-        pip install -e .
+        pip install .
     - name: Run tests
       run: coverage run -m pytest -v
     - name: Create Coverage Report

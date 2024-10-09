@@ -40,6 +40,6 @@ setup(
     ),
     setup_requires=setup_requirements,
     url="https://github.com/acdh-oeaw/acdh-wikidata-pyutils",
-    version="1.1",
+    version="1.2",
     zip_safe=False,
 )
