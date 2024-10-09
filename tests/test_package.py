@@ -94,3 +94,11 @@ class TestTestTest(unittest.TestCase):
         wiki_url = "https://www.wikidata.org/wiki/Q308720"
         item = WikiDataOrg(wiki_url)
         self.assertEqual(item.gnd_uri, "https://d-nb.info/gnd/38633-9")
+
+    def test_014_remove_firstname_from_name(self):
+        wiki_url = "https://www.wikidata.org/wiki/Q2835019"
+        item = WikiDataPerson(wiki_url)
+        apis_ent = item.get_apis_entity()
+        first_name = apis_ent["first_name"]
+        name = apis_ent["name"]
+        self.assertTrue(first_name not in name)
