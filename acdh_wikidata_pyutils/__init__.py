@@ -129,6 +129,9 @@ class WikiDataPerson(WikiDataEntity):
             self.name = str(self.entity[name_prop].label)
         except KeyError:
             self.name = self.label
+        if self.first_name and self.name.startswith(f"{self.first_name} "):
+            self.name = self.name.replace(f"{self.first_name} ", "")
+
         try:
             self.date_of_birth = str(self.entity[date_of_birth_prop])
         except (KeyError, ValueError):
