@@ -10,16 +10,18 @@ GEONAMES_URL = "https://sws.geonames.org/"
 GND_URL = "https://d-nb.info/gnd/"
 IMG_EP = "https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&entity={}&format=json"
 URL_STUB = "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/{}"
+JSON_API_STUB = "https://commons.wikimedia.org/w/api.php?action=query&titles=File:{}&prop=imageinfo&iiprop=url&iiurlwidth={}&format=json"  # noqa
 
 
-def fetch_image(wikidata_id: str) -> str:
+def fetch_image(wikidata_id: str, thumb_width: int = 250) -> str:
     """returns the URL of a wikimedia image related to the given wikidata id
 
     Args:
         wikidata_id (str): a wikidata id e.g. 'Q2390830'
+        thumb_width (int): the requested image widh in pixels, defaults to 250
 
     Returns:
-        str: the URL to the image, e.g. 'https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/Theo.%20Komisarjevsky%20LCCN2014715267.jpg'
+        str: the URL to the image, e.g. ''https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Theo._Komisarjevsky_LCCN2014715267.jpg/250px-Theo._Komisarjevsky_LCCN2014715267.jpg''
     """  # noqa
     if wikidata_id.startswith("http"):
         wikidata_id = get_norm_id(wikidata_id)
@@ -31,7 +33,14 @@ def fetch_image(wikidata_id: str) -> str:
         return ""
     if img_name is not None:
         img = URL_STUB.format(urllib.parse.quote(img_name))
-        return img
+        img_name = img.split("file/")[-1]
+        api_url = JSON_API_STUB.format(img_name, thumb_width)
+        data = requests.get(api_url).json()
+        try:
+            thumburl = next(iter(data["query"]["pages"].values()))["imageinfo"][0]["thumburl"]
+        except (KeyError, IndexError):
+            return img
+        return thumburl
 
 
 class NoWikiDataUrlException(Exception):
