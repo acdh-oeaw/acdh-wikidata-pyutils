@@ -21,7 +21,7 @@ from acdh_wikidata_pyutils import WikiDataPerson
 item = WikiDataPerson("https://www.wikidata.org/wiki/Q44331")
 person = item.get_apis_entity()
 print(person)
-# {'name': 'Schnitzler', 'first_name': 'Arthur', 'start_date_written': '1862-05-15', 'end_date_written': '1931-10-21', 'gender': 'male'}
+>>> {'name': 'Schnitzler', 'first_name': 'Arthur', 'start_date_written': '1862-05-15', 'end_date_written': '1931-10-21', 'gender': 'male'}
 ```
 
 ```python
@@ -30,5 +30,14 @@ from acdh_wikidata_pyutils import WikiDataPlace
 item = WikiDataPlace("https://www.wikidata.org/wiki/Q41329")
 place = item.get_apis_entity()
 print(place)
-# {'name': 'Linz', 'lat': 48.30583333333333, 'long': 14.286388888888888}
+>>> {'name': 'Linz', 'lat': 48.30583333333333, 'long': 14.286388888888888}
+```
+
+
+```python
+from acdh_wikidata_pyutils import fetch_image 
+wiki_id = "Q2390830"
+item = fetch_image(wiki_id)
+print(item)
+>>> "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Theo._Komisarjevsky_LCCN2014715267.jpg/250px-Theo._Komisarjevsky_LCCN2014715267.jpg"
 ```
