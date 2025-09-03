@@ -2,6 +2,7 @@
 [![Test](https://github.com/acdh-oeaw/acdh-wikidata-pyutils/actions/workflows/test.yml/badge.svg)](https://github.com/acdh-oeaw/acdh-wikidata-pyutils/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/acdh-oeaw/acdh-wikidata-pyutils/graph/badge.svg?token=5ZWMXlmFmr)](https://codecov.io/gh/acdh-oeaw/acdh-wikidata-pyutils)
 [![PyPI version](https://badge.fury.io/py/acdh-wikidata-pyutils.svg)](https://badge.fury.io/py/acdh-wikidata-pyutils)
+[![Build the docs](https://github.com/acdh-oeaw/acdh-wikidata-pyutils/actions/workflows/docs.yml/badge.svg)](https://acdh-oeaw.github.io/acdh-wikidata-pyutils/)
 
 # acdh-wikidata-pyutils
 Utility package to fetch data from Wikidata
