@@ -12,6 +12,7 @@ requires-python = ">=3.10"
 dependencies = [
     "acdh-arche-assets>=3.25.0",
     "requests>=2.32.5",
+    "typing-extensions>=4.15.0",
     "wikidata>=0.8.1",
 ]
 
