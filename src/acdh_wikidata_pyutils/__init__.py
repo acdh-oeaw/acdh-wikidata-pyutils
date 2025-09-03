@@ -1,8 +1,8 @@
 import urllib.parse
-import requests
-from typing_extensions import Self
 
+import requests
 from AcdhArcheAssets.uri_norm_rules import get_norm_id, get_normalized_uri
+from typing_extensions import Self
 from wikidata.client import Client
 
 WIKIDATA_URL = "https://www.wikidata.org/wiki/"
@@ -12,21 +12,28 @@ IMG_EP = "https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&ent
 URL_STUB = "https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/{}"
 JSON_API_STUB = "https://commons.wikimedia.org/w/api.php?action=query&titles=File:{}&prop=imageinfo&iiprop=url&iiurlwidth={}&format=json"  # noqa
 
+DEFAULT_REQUEST_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0"
+}
 
-def fetch_image(wikidata_id: str, thumb_width: int = 250) -> str:
+
+def fetch_image(
+    wikidata_id: str, thumb_width: int = 250, headers: dict = DEFAULT_REQUEST_HEADERS
+) -> str:
     """returns the URL of a wikimedia image related to the given wikidata id
 
     Args:
         wikidata_id (str): a wikidata id e.g. 'Q2390830'
         thumb_width (int): the requested image widh in pixels, defaults to 250
+        headers (dict): optional headers to be sent with the request, defaults to DEFAULT_REQUEST_HEADERS
 
     Returns:
-        str: the URL to the image, e.g. ''https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Theo._Komisarjevsky_LCCN2014715267.jpg/250px-Theo._Komisarjevsky_LCCN2014715267.jpg''
+        str: the URL to the image, e.g. 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Theo._Komisarjevsky_LCCN2014715267.jpg/250px-Theo._Komisarjevsky_LCCN2014715267.jpg'
     """  # noqa
     if wikidata_id.startswith("http"):
         wikidata_id = get_norm_id(wikidata_id)
     url = IMG_EP.format(wikidata_id)
-    r = requests.get(url)
+    r = requests.get(url, headers=headers)
     try:
         img_name = r.json()["claims"]["P18"][0]["mainsnak"]["datavalue"]["value"]
     except KeyError:
@@ -35,7 +42,7 @@ def fetch_image(wikidata_id: str, thumb_width: int = 250) -> str:
         img = URL_STUB.format(urllib.parse.quote(img_name))
         img_name = img.split("file/")[-1]
         api_url = JSON_API_STUB.format(img_name, thumb_width)
-        data = requests.get(api_url).json()
+        data = requests.get(api_url, headers=headers).json()
         try:
             thumburl = next(iter(data["query"]["pages"].values()))["imageinfo"][0][
                 "thumburl"
@@ -74,6 +81,12 @@ class WikiDataEntity:
         self.wikidata_url = check_url(wikidata_url)
         self.wikidata_id = get_norm_id(self.wikidata_url)
         self.client = Client()
+        self.client.opener.addheaders = [
+            (
+                "User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0",
+            )
+        ]
         self.entity = self.client.get(self.wikidata_id, load=True)
         self.label = str(self.entity.label)
         gnd_uri_property = self.client.get("P227")
