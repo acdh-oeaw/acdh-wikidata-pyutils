@@ -7,14 +7,13 @@
 # acdh-wikidata-pyutils
 Utility package to fetch data from Wikidata
 
-## development
+## install
 
-* create virtual env `python -m venv venv` and activate it `source venv/bin/activate`
-* install dev-dependencies `pip install -r requirements_dev.txt`
-* install acdh-wikidata-pyutils locally `pip install -e .`
-* run tests `coverage run -m pytest`
+```bash
+pip install acdh-wikidata-pyutil
+```
 
-# usage
+## usage
 
 ```python
 from acdh_wikidata_pyutils import WikiDataPerson
