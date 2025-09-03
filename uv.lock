@@ -21,6 +21,7 @@ source = { editable = "." }
 dependencies = [
     { name = "acdh-arche-assets" },
     { name = "requests" },
+    { name = "typing-extensions" },
     { name = "wikidata" },
 ]
 
@@ -37,6 +38,7 @@ dev = [
 requires-dist = [
     { name = "acdh-arche-assets", specifier = ">=3.25.0" },
     { name = "requests", specifier = ">=2.32.5" },
+    { name = "typing-extensions", specifier = ">=4.15.0" },
     { name = "wikidata", specifier = ">=0.8.1" },
 ]
 
