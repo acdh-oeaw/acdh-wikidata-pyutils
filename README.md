@@ -10,7 +10,7 @@ Utility package to fetch data from Wikidata
 ## install
 
 ```shell
-pip install acdh-wikidata-pyutil
+pip install acdh-wikidata-pyutils
 ```
 
 ## usage
