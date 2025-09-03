@@ -37,7 +37,9 @@ def fetch_image(wikidata_id: str, thumb_width: int = 250) -> str:
         api_url = JSON_API_STUB.format(img_name, thumb_width)
         data = requests.get(api_url).json()
         try:
-            thumburl = next(iter(data["query"]["pages"].values()))["imageinfo"][0]["thumburl"]
+            thumburl = next(iter(data["query"]["pages"].values()))["imageinfo"][0][
+                "thumburl"
+            ]
         except (KeyError, IndexError):
             return img
         return thumburl
