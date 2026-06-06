@@ -6,6 +6,7 @@ from typing_extensions import Self
 from wikidata.client import Client
 
 WIKIDATA_URL = "https://www.wikidata.org/wiki/"
+WIEN_G_URL = "https://www.geschichtewiki.wien.gv.at/Special:URIResolver/?curid="
 GEONAMES_URL = "https://sws.geonames.org/"
 GND_URL = "https://d-nb.info/gnd/"
 IMG_EP = "https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&entity={}&format=json"
@@ -15,6 +16,29 @@ JSON_API_STUB = "https://commons.wikimedia.org/w/api.php?action=query&titles=Fil
 DEFAULT_REQUEST_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0"
 }
+
+
+def _make_client() -> Client:
+    client = Client()
+    client.opener.addheaders = [
+        (
+            "User-Agent",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0",
+        )
+    ]
+    return client
+
+
+# Resolve stable property entities once at import time.
+_PROPERTY_CLIENT = _make_client()
+try:
+    GND_URI_PROPERTY = _PROPERTY_CLIENT.get("P227")
+except Exception:
+    GND_URI_PROPERTY = None
+try:
+    WIEN_GESCHICHTE_WIKI_PROPERTY = _PROPERTY_CLIENT.get("P7842")
+except Exception:
+    WIEN_GESCHICHTE_WIKI_PROPERTY = None
 
 
 def fetch_image(
@@ -80,21 +104,24 @@ class WikiDataEntity:
     def __init__(self, wikidata_url):
         self.wikidata_url = check_url(wikidata_url)
         self.wikidata_id = get_norm_id(self.wikidata_url)
-        self.client = Client()
-        self.client.opener.addheaders = [
-            (
-                "User-Agent",
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0",
-            )
-        ]
+        self.client = _make_client()
         self.entity = self.client.get(self.wikidata_id, load=True)
         self.label = str(self.entity.label)
-        gnd_uri_property = self.client.get("P227")
+        gnd_uri_property = GND_URI_PROPERTY or self.client.get("P227")
+        wien_geschichte_wiki_property = (
+            WIEN_GESCHICHTE_WIKI_PROPERTY or self.client.get("P7842")
+        )
         try:
             gnd_uri = self.entity[gnd_uri_property]
             self.gnd_uri = get_normalized_uri(f"{GND_URL}{gnd_uri}")
         except KeyError:
             self.gnd_uri = False
+        try:
+            self.wien_geschichte_wiki = (
+                f"{WIEN_G_URL}{self.entity[wien_geschichte_wiki_property]}"
+            )
+        except KeyError:
+            self.wien_geschichte_wiki = False
 
 
 class WikiDataPlace(WikiDataEntity):
