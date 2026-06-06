@@ -2,10 +2,10 @@ import unittest
 
 from acdh_wikidata_pyutils import (
     NoWikiDataUrlException,
-    WikiDataPerson,
-    WikiDataPlace,
     WikiDataEntity,
     WikiDataOrg,
+    WikiDataPerson,
+    WikiDataPlace,
     fetch_image,
 )
 
@@ -59,13 +59,13 @@ class TestTestTest(unittest.TestCase):
         self.assertTrue("lat" in item.get_apis_entity().keys())
 
     def test_008_no_coords(self):
-        item = WikiDataPlace("https://www.wikidata.org/wiki/Q16006181")
+        item = WikiDataPlace("https://www.wikidata.org/wiki/Q140047166")
         self.assertFalse(item.lat)
         self.assertFalse(item.gnd_uri)
         self.assertFalse(item.geonames_uri)
 
     def test_008_no_ngd(self):
-        item = WikiDataPerson("https://www.wikidata.org/wiki/Q16006181")
+        item = WikiDataPerson("https://www.wikidata.org/wiki/Q140047166")
         self.assertFalse(item.gnd_uri)
 
     def test_009_broken_date(self):
