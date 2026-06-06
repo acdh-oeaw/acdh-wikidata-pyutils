@@ -1,6 +1,6 @@
 [project]
 name = "acdh-wikidata-pyutils"
-version = "3.0"
+version = "3.1"
 description = "Python package to fetch data from Wikidata"
 readme = "README.md"
 license = { file = "LICENSE" }
