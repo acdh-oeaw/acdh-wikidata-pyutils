@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.10"
 
 [[package]]
@@ -39,7 +39,7 @@ requires-dist = [
     { name = "acdh-arche-assets", specifier = ">=3.25.0" },
     { name = "requests", specifier = ">=2.32.5" },
     { name = "typing-extensions", specifier = ">=4.15.0" },
-    { name = "wikidata", specifier = ">=0.8.1" },
+    { name = "wikidata", specifier = ">=0.9.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -755,9 +755,9 @@ wheels = [
 
 [[package]]
 name = "wikidata"
-version = "0.8.1"
+version = "0.9.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/f5/61/b8c6f83737e02dd4098a33fca84a517d6583a1bf2755ac9e1adb4ec5c8b6/Wikidata-0.8.1.tar.gz", hash = "sha256:2d44aa538ca3bcbc36ddf9f88957f6e487407d96e7a8a7bcee39da472b90f28b", size = 26112, upload-time = "2024-07-07T03:46:11.162Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c6/da/59fe9524010a37eafd06673f87783a7440a8cf2606ac7b214dae1ba5fa39/wikidata-0.9.0.tar.gz", hash = "sha256:059e4e9574aa2a03e4327d28df8c0cc661db2826a75900cda0142bdc01b4bb7f", size = 26350, upload-time = "2025-10-31T06:52:34.419Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/39/04/000f4b830f0a14a56d2fe1fea43e67b7f7ea561e7cca8d9b57f48157ec4c/Wikidata-0.8.1-py3-none-any.whl", hash = "sha256:2f0e2b8b77150cb374a729f3b4fbadbfedfbd091e1f25d08f5403cb0d8306cda", size = 29118, upload-time = "2024-07-07T03:46:08.609Z" },
+    { url = "https://files.pythonhosted.org/packages/98/f4/101b2fa3b57641f52a7d83c103d5bb18899122299d456fc2d8783e351148/wikidata-0.9.0-py3-none-any.whl", hash = "sha256:3e908cecf9fab177393034ccac759fbdb79b9389b32b4f1a2cc556fac3a25895", size = 44066, upload-time = "2025-10-31T06:52:32.862Z" },
 ]

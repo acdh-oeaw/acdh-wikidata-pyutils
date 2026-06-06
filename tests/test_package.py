@@ -1,6 +1,7 @@
 import unittest
 
 from acdh_wikidata_pyutils import (
+    WIEN_G_URL,
     NoWikiDataUrlException,
     WikiDataEntity,
     WikiDataOrg,
@@ -67,6 +68,7 @@ class TestTestTest(unittest.TestCase):
     def test_008_no_ngd(self):
         item = WikiDataPerson("https://www.wikidata.org/wiki/Q140047166")
         self.assertFalse(item.gnd_uri)
+        self.assertFalse(item.wien_geschichte_wiki)
 
     def test_009_broken_date(self):
         item = WikiDataPerson(BROKEN)
@@ -102,3 +104,7 @@ class TestTestTest(unittest.TestCase):
         first_name = apis_ent["first_name"]
         name = apis_ent["name"]
         self.assertTrue(first_name not in name)
+
+    def test_015_wien_geschichte_wiki(self):
+        item = ARTHUR_SCHNITZLER
+        self.assertEqual(item.wien_geschichte_wiki, f"{WIEN_G_URL}11215")
